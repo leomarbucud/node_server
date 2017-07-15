@@ -8,7 +8,7 @@ var app = require('express')();
 var http = require('http').Server(app);
 var https = require('https').Server(options, app);
 var http2 = require('http');
-var io = require('socket.io')(https);
+var io = require('socket.io')(http);//, {origins: 'thegrid.com:* https://dev.thegrid.com:* https://thegrid.com:*'});
 
 
 
@@ -18,11 +18,11 @@ var io = require('socket.io')(https);
   // checkAuthToken(token, callback);
 //});
 
-var server = http2.createServer(function (request, response) {
-  response.writeHead(200, {"Content-Type": "text/plain"});
-  response.end("Hello World\n");
-	console.log('entered');
-});
+// var server = http2.createServer(function (request, response) {
+//   response.writeHead(200, {"Content-Type": "text/plain"});
+//   response.end("Hello World\n");
+// 	console.log('entered');
+// });
 
 // Listen on port 8000, IP defaults to 127.0.0.1
 // server.listen(8080);
@@ -37,12 +37,15 @@ io.on('connection', function(socket){
 
 	socket.on('new-user', function(data) {
 		console.log('new user is connected', data);
-		var room = data.user_id;
-		socket.join(room);
-		io.sockets.in(room).emit('user-callback', data.user_id);
+    if(data.user) {
+      var room = data.user.id;
+      socket.join(room);
+      io.sockets.in(room).emit('user-callback', data.user_id);
+    }
 	});
 
-	socket.on('disconnect', function () {
+	socket.on('disconnect', function (socket) {
+
 		console.log('A user disconnected');
 	});
 
