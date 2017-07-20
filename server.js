@@ -108,5 +108,5 @@ io.on('connection', function(socket){
 
 });
 
-io.listen(8080);
+io.listen(3000);
 console.log('listening on *:3000');
