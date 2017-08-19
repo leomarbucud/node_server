@@ -4,6 +4,7 @@
   "description": "node server for the grid",
   "main": "server.js",
   "dependencies": {
+    "cors": "^2.8.4",
     "express": "^4.15.3",
     "socket.io": "^2.0.3"
   },
