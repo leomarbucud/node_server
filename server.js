@@ -95,6 +95,21 @@ io.on('connection', socket => {
     console.log('sending message to', data.recipient_id);
 		io.sockets.in(data.recipient_id).emit('user:receive_message', data);
 		io.sockets.in(data.author_id).emit('user:sent_message', data);
-	});
+  });
+  
+  socket.on('user:create_conversation', data => {
+    if(!data) return;
+    var recipient_id = data.user_id_1;
+    if( data.user_id_1 == data.last_updated_by ) {
+      recipient_id = data.user_id_2;
+    }
+    io.sockets.in(recipient_id).emit('user:create_conversation', data);
+  });
+
+  socket.on('user:typing', data => {
+    if(!data) return;
+    console.log('user is typing...');
+		io.sockets.in(data.recipient_id).emit('user:typing', data);
+  });
 
 });
