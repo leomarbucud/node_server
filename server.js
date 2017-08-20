@@ -87,7 +87,9 @@ io.on('connection', socket => {
   
   socket.on('user:bidded', data => {
     if(!data) return;
-		socket.broadcast.emit('user:bidded', data);
+    // socket.broadcast.emit('user:bidded', data);
+    console.log(data);
+    io.sockets.in(data.job.user.id).emit('user:bidded', data);
   });
   
   socket.on('user:send_message', data => {
