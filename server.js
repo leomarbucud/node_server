@@ -87,17 +87,18 @@ io.on('connection', socket => {
   
   socket.on('user:bidded', data => {
     if(!data) return;
-    // socket.broadcast.emit('user:bidded', data);
-    console.log('bidders', data.job.bidders);
-    if(data.job.bidders.length) {
-      data.job.bidders.forEach(bidder => {
-        console.log('bidder', bidder.user_id);
-        // avoid exposing other bidder info
-        delete bidder.user;
-        io.sockets.in(bidder.user_id).emit('user:other_bidded', data.job.bidders);
+
+    console.log('bidded', data);
+    io.sockets.in(data.job.user.id).emit('user:bidded', data);
+  });
+
+  socket.on('user:other_bidded', data => {
+    if(!data) return;
+    if(data.length) {
+      data.forEach(bidder => {
+        io.sockets.in(bidder.user.id).emit('user:other_bidded', bidder.id);
       });
     }
-    io.sockets.in(data.job.user.id).emit('user:bidded', data);
   });
   
   socket.on('user:send_message', data => {
@@ -120,6 +121,12 @@ io.on('connection', socket => {
     if(!data) return;
     console.log('user is typing...', data);
     io.sockets.in(data.recipient_id).emit('user:typing', data);
+  });
+
+  socket.on('user:grant_job', data => {
+    if(!data) return;
+    
+    io.sockets.in(data.user.id).emit('user:grant_job', data);
   });
 
 });
