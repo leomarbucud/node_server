@@ -88,7 +88,15 @@ io.on('connection', socket => {
   socket.on('user:bidded', data => {
     if(!data) return;
     // socket.broadcast.emit('user:bidded', data);
-    console.log(data);
+    console.log('bidders', data.job.bidders);
+    if(data.job.bidders.length) {
+      data.job.bidders.forEach(bidder => {
+        console.log('bidder', bidder.user_id);
+        // avoid exposing other bidder info
+        delete bidder.user;
+        io.sockets.in(bidder.user_id).emit('user:other_bidded', data.job.bidders);
+      });
+    }
     io.sockets.in(data.job.user.id).emit('user:bidded', data);
   });
   
@@ -110,8 +118,8 @@ io.on('connection', socket => {
 
   socket.on('user:typing', data => {
     if(!data) return;
-    console.log('user is typing...');
-		io.sockets.in(data.recipient_id).emit('user:typing', data);
+    console.log('user is typing...', data);
+    io.sockets.in(data.recipient_id).emit('user:typing', data);
   });
 
 });
