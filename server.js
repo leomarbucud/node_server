@@ -126,7 +126,7 @@ io.on('connection', socket => {
   socket.on('user:grant_job', data => {
     if(!data) return;
     
-    io.sockets.in(data.user.id).emit('user:grant_job', data);
+    io.sockets.in(data.user_id).emit('user:grant_job', data);
   });
 
 });
