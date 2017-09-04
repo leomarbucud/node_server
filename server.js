@@ -110,10 +110,10 @@ io.on('connection', socket => {
   
   socket.on('user:create_conversation', data => {
     if(!data) return;
-    var recipient_id = data.user_id_1;
-    if( data.user_id_1 == data.last_updated_by ) {
-      recipient_id = data.user_id_2;
-    }
+    let recipient_id = data.to;
+    // if( data.user_id_2 == data.last_updated_by ) {
+    //   recipient_id = data.user_id_1;
+    // }
     io.sockets.in(recipient_id).emit('user:create_conversation', data);
   });
 
