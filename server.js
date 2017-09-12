@@ -101,6 +101,24 @@ io.on('connection', socket => {
     }
   });
   
+  socket.on('user:job_in_progress', data => {
+    if(!data) return;
+    console.log('job mark in progress', data);
+    io.sockets.in(data.winner_user_id).emit('user:job_in_progress', data);
+  });
+  
+  socket.on('user:job_review', data => {
+    if(!data) return;
+    console.log('job review', data);
+    io.sockets.in(data.winner_user_id).emit('user:job_review', data);
+  });
+  
+  socket.on('user:job_complete', data => {
+    if(!data) return;
+    console.log('job job_complete', data);
+    io.sockets.in(data.winner_user_id).emit('user:job_complete', data);
+  });
+  
   socket.on('user:send_message', data => {
     if(!data) return;
     console.log('sending message to', data.recipient_id);
