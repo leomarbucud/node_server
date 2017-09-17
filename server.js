@@ -90,6 +90,12 @@ io.on('connection', socket => {
 
     console.log('bidded', data);
     io.sockets.in(data.job.user.id).emit('user:bidded', data);
+
+    
+    socket.broadcast.emit('post:bidded', {
+      id: data.job.id,
+      date: data.job.date
+    });
   });
 
   socket.on('user:other_bidded', data => {
