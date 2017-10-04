@@ -33,8 +33,8 @@ class Server {
 
   constructor() {
     this.connectedCount = 0;
-    this.clients = [];
-    this.authClients = [];
+    this.clients = {};
+    this.authClients = {};
   }
 
   connection(id, socket) {
@@ -47,6 +47,14 @@ class Server {
     delete this.clients[id];
     this.connectedCount--;
     this.logConnectedCount();
+  }
+
+  addAuthClient(id, user_id) {
+    this.authClients[id] = user_id;
+  }
+
+  removeAuthClient(id) {
+    delete this.authClients[id];
   }
 
   logConnectedCount() {
@@ -64,6 +72,9 @@ io.on('connection', socket => {
   socket.on('disconnect', () => {
     // remove client on disconnet
     server.disconnect(socket.id);
+    server.removeAuthClient(socket.id);
+    io.sockets.emit('user:online', server.authClients);
+    // console.log(server.authClients);
   });
 
   // logged user
@@ -72,8 +83,11 @@ io.on('connection', socket => {
     // create room for individual user
     const user = data;
     console.log('logged in ', user.name);
+    server.addAuthClient(socket.id, user.id);
     socket.join(user.id);
-  })
+    io.sockets.emit('user:online', server.authClients);
+    // console.log(server.authClients);
+  });
   
 
 	socket.on('user:connect', data => {
