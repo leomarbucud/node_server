@@ -178,5 +178,47 @@ io.on('connection', socket => {
     
     io.sockets.in(data.user_id).emit('user:grant_job', data);
   });
+  
+  socket.on('user:cancel_grant_job', data => {
+    if(!data) return;
+    
+    io.sockets.in(data.user_id).emit('user:cancel_grant_job', data);
+  });
+  
+  socket.on('bidder:accept_job', data => {
+    if(!data) return;
+    
+    io.sockets.in(data.user_id).emit('bidder:accept_job', data);
+  });
+  
+  socket.on('bidder:decline_job', data => {
+    if(!data) return;
+    
+    io.sockets.in(data.user_id).emit('bidder:decline_job', data);
+  });
+ 
+  socket.on('user:reply_query', data => {
+    if(!data) return;
+    
+    io.sockets.in(data.user_id).emit('user:reply_query', data);
+  });
+  
+  socket.on('user:like_query', data => {
+    if(!data) return;
+    
+    io.sockets.in(data.user_id).emit('user:like_query', data);
+  });
+  
+  socket.on('user:dislike_query', data => {
+    if(!data) return;
+    
+    io.sockets.in(data.user_id).emit('user:dislike_query', data);
+  });
+ 
+  socket.on('user:add_query', data => {
+    if(!data) return;
+    
+    io.sockets.in(data.user_id).emit('user:add_query', data);
+  });
 
 });
