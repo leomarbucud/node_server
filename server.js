@@ -201,6 +201,7 @@ io.on('connection', socket => {
     if(!data) return;
     
     io.sockets.in(data.user_id).emit('user:reply_query', data);
+    socket.broadcast.emit('user_post:reply_query', data);
   });
   
   socket.on('user:like_query', data => {
@@ -219,6 +220,12 @@ io.on('connection', socket => {
     if(!data) return;
     
     io.sockets.in(data.user_id).emit('user:add_query', data);
+  });
+  
+  socket.on('user_post:update_query', data => {
+    if(!data) return;
+    
+    socket.broadcast.emit('user_post:update_query', data);
   });
 
 });
