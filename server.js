@@ -23,6 +23,8 @@ app.use(function (req, res, next) {
     next();
 });
 
+app.get('/', (req, res) => res.send('Hello World!'))
+
 var _server = app.listen(app.get('port'), function () {
     console.log('Express server listening on port ' + _server.address().port);
 });
@@ -104,6 +106,7 @@ io.on('connection', socket => {
 
     console.log('bidded', data);
     io.sockets.in(data.job.user.id).emit('user:bidded', data);
+    io.sockets.in(data.user_id).emit('user:bidded', data);
 
     
     socket.broadcast.emit('post:bidded', {
